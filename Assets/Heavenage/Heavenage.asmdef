@@ -1,0 +1,14 @@
+{
+    "name": "Heavenage",
+    "rootNamespace": "",
+    "references": ["GUID:f19b7062049b889489d8f4a9e684c0a1"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
