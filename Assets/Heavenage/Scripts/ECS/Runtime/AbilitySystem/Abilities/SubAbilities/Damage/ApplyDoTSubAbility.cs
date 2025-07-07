@@ -33,7 +33,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Dam
             _damagePerTick = data.damagePerTick;
         }
 
-        public bool Tick(Entity caster, Entity target, World world, float deltaTime)
+        public bool Tick(Entity activeAbility, Entity caster, Entity target, World world, float deltaTime)
         {
             var dotStash = StashRegistry.GetStash<DotEffectComponent>();
             var existingDots = world.Filter.With<DotEffectComponent>().Build();

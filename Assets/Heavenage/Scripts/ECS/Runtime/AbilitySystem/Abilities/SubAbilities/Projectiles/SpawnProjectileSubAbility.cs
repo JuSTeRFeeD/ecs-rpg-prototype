@@ -50,7 +50,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Pro
             _destroyOnHit = data.destroyOnHit;
         }
 
-        public bool Tick(Entity caster, Entity target, World world, float deltaTime)
+        public bool Tick(Entity activeAbility, Entity caster, Entity target, World world, float deltaTime)
         {
             var projectileEntity = world.CreateEntity();
 

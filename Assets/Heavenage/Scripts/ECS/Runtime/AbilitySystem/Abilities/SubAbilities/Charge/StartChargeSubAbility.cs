@@ -1,5 +1,6 @@
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Charge.TargetingModifiers;
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.Targeting;
+using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
 using Heavenage.Scripts.ECS.Runtime.Extensions;
 using Heavenage.Scripts.ECS.Runtime.Views;
 using Scellecs.Morpeh;
@@ -45,15 +46,17 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Cha
             _targetingModifier = data.targetingModifier;
         }
 
-        public bool Tick(Entity caster, Entity target, World world, float deltaTime)
+        public bool Tick(Entity activeAbility, Entity caster, Entity target, World world, float deltaTime)
         {
             // Methods to use:
-            _targetingStrategy.OnStart(caster, world);
+            _targetingStrategy.OnStart(activeAbility, world);
 
             var chargingStash = StashRegistry.GetStash<ChargingAbilityComponent>();
-            if (!chargingStash.Has(caster))
+            var inputReleasedStash = StashRegistry.GetStash<InputReleasedTag>();
+            
+            if (!chargingStash.Has(activeAbility))
             {
-                chargingStash.Add(caster, new ChargingAbilityComponent
+                chargingStash.Add(activeAbility, new ChargingAbilityComponent
                 {
                     ElapsedTime = 0f,
                     MaxChargeTime = _maxChargeTime,
@@ -61,22 +64,20 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Cha
                 });
             }
             
-            ref var charging = ref chargingStash.Get(caster);
-            chargingStash.Get(caster).ElapsedTime += deltaTime;
+            ref var charging = ref chargingStash.Get(activeAbility);
+            charging.ElapsedTime += deltaTime;
             
-            _targetingModifier?.Modify(caster, world, _targetingStrategy, charging.ElapsedTime / charging.MaxChargeTime);
+            _targetingModifier?.Modify(activeAbility, world, _targetingStrategy, charging.ElapsedTime / charging.MaxChargeTime);
             
-            _targetingStrategy.Tick(caster, world);
+            _targetingStrategy.Tick(activeAbility, caster, world);
 
             // todo: resolve on input key release
-            if (charging.AutoReleaseOnMaxCharge && charging.ElapsedTime >= charging.MaxChargeTime) 
+            if (charging.AutoReleaseOnMaxCharge && charging.ElapsedTime >= charging.MaxChargeTime || 
+                inputReleasedStash.Has(activeAbility)) 
             {
                 // TODO: use resolved targets
-                var resolvedTargets = _targetingStrategy.GetTargets(caster, world);
-                _targetingStrategy.OnEnd(caster, world);
-
-                // TODO: clean up charging
-                chargingStash.Remove(caster);
+                var resolvedTargets = _targetingStrategy.GetTargets(activeAbility, world);
+                _targetingStrategy.OnEnd(activeAbility, world);
                 
                 return true;
             }

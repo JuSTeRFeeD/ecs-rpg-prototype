@@ -14,14 +14,15 @@ namespace Heavenage.Scripts.ECS.Runtime.Player.Systems
     {
         [Inject] private Stash<AbilitiesComponent> _abilitiesStash;
         [Inject] private Stash<UseAbilityRequest> _useAbilityStash;
+        [Inject] private Stash<InputReleasedTag> _inputReleasedStash;
         
         public World World { get; set; }
 
-        private Filter _filter;
+        private Filter _playerFilter;
 
         public void OnAwake()
         {
-            _filter = World.Filter
+            _playerFilter = World.Filter
                 .With<PlayerTag>()
                 .With<AbilitiesComponent>()
                 .Build();
@@ -29,29 +30,34 @@ namespace Heavenage.Scripts.ECS.Runtime.Player.Systems
 
         public void OnUpdate(float deltaTime)
         {
-            foreach (var entity in _filter)
+            foreach (var entity in _playerFilter)
             {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    TryActivateAbility(entity, 0);
-                }
+                if (Input.GetMouseButtonDown(1))
+                    TryActivateAbility(entity, 0, false);
+                else if (Input.GetMouseButtonUp(1))
+                    TryActivateAbility(entity, 0, true);
             }
         }
 
-        private void TryActivateAbility(Entity entity, int index)
+        private void TryActivateAbility(Entity character, int abilityIdx, bool isReleased)
         {
-            ref var abilities = ref _abilitiesStash.Get(entity);
+            ref var abilities = ref _abilitiesStash.Get(character);
             
-            if (abilities.AbilityEntities == null || index > abilities.AbilityEntities.Count || index < 0)
+            if (abilities.AbilityEntities == null || abilityIdx > abilities.AbilityEntities.Count || abilityIdx < 0)
                 return;
 
-            var abilityEntity = abilities.AbilityEntities[index];
-            _useAbilityStash.Set(abilityEntity, new UseAbilityRequest
+            var abilityEntity = abilities.AbilityEntities[abilityIdx];
+
+            if (!isReleased)
             {
-                Caster = entity,
-                Target = default,
-            });
-            Debug.Log($"Used ability {index}");
+                _useAbilityStash.Set(abilityEntity, new UseAbilityRequest { Caster = character, });
+                Debug.Log($"Used ability {abilityIdx}");
+            }
+            else
+            {
+                _inputReleasedStash.Set(abilityEntity);
+                Debug.Log($"Released ability {abilityIdx}");
+            }
         }
 
         public void Dispose() { }

@@ -1,4 +1,5 @@
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
+using Heavenage.Scripts.ECS.Runtime.Common.Components;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 using VContainer;
@@ -11,6 +12,8 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
     public sealed class AbilityExecutionSystem : ISystem
     {
         [Inject] private Stash<ActiveAbilityComponent> _activeAbilityStash;
+        [Inject] private Stash<OriginalAbilityInProgressTag> _originalAbilityInProgressStash;
+        [Inject] private Stash<ToDestroyTag> _toDestroyStash;
         
         public World World { get; set; }
         
@@ -33,12 +36,13 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
                 // End ability
                 if (activeAbility.CurrentStep >= tasks.Count)
                 {
-                    _activeAbilityStash.Remove(entity);
+                    _originalAbilityInProgressStash.Remove(activeAbility.OriginalAbilityEntity);
+                    _toDestroyStash.Add(entity);
                     continue;
                 }
 
                 var task = tasks[activeAbility.CurrentStep];
-                if (task.Tick(activeAbility.Caster, activeAbility.Target, World, deltaTime))
+                if (task.Tick(entity, activeAbility.Caster, activeAbility.Target, World, deltaTime))
                 {
                     activeAbility.CurrentStep++;
                 }

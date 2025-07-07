@@ -40,7 +40,6 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Projectiles.Systems
                     Caster = projectile.Source,
                     Target = hit.HitEntity,
                     CurrentStep = 0,
-                    Timer = 0,
                     Tasks = projectile.OnHitAbility.CreateAbilityTasks()
                 });
             }

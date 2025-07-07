@@ -1,4 +1,5 @@
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
+using Heavenage.Scripts.ECS.Runtime.Common.Components;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 using VContainer;
@@ -13,6 +14,8 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
         [Inject] private Stash<UseAbilityRequest> _useAbilityStash;
         [Inject] private Stash<AbilityComponent> _abilityComponentStash;
         [Inject] private Stash<ActiveAbilityComponent> _activeAbilityStash;
+        [Inject] private Stash<OwnerComponent> _ownerStash;
+        [Inject] private Stash<OriginalAbilityInProgressTag> _originalAbilityInProgressStash;
         
         public World World { get; set; }
 
@@ -23,27 +26,38 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
             _filter = World.Filter
                 .With<UseAbilityRequest>()
                 .With<AbilityComponent>()
-                .Without<ActiveAbilityComponent>()
+                .Without<OriginalAbilityInProgressTag>()
                 .Build();
         }
 
         public void OnUpdate(float deltaTime)
         {
+            //
+            // TODO: somewhere check if ability is already active && is not on cooldown && requirements are met
+            //
             foreach (var entity in _filter)
             {
                 ref readonly var activateAbility = ref _useAbilityStash.Get(entity);
-                
-                // TODO: somewhere check if ability is already active && is not on cooldown && requirements are met
-                // before activating
-                
-                ref readonly var ability = ref _abilityComponentStash.Get(entity);
-                
-                _activeAbilityStash.Add(entity, new ActiveAbilityComponent
+                ref readonly var abilityData = ref _abilityComponentStash.Get(entity);
+
+                // Create active ability entity to execute
+                var activeAbilityEntity = World.CreateEntity();
+                _ownerStash.Add(activeAbilityEntity, new OwnerComponent
                 {
+                    Value = _ownerStash.Get(entity).Value
+                });
+                _activeAbilityStash.Add(activeAbilityEntity, new ActiveAbilityComponent
+                {
+                    OriginalAbilityEntity = entity,
                     Caster = activateAbility.Caster,
-                    Tasks = ability.AbilityDefinition.CreateAbilityTasks(),
+                    Tasks = abilityData.AbilityDefinition.CreateAbilityTasks(),
                     CurrentStep = 0,
-                    Timer = 0f,
+                });
+                
+                // Mark original ability as in progress
+                _originalAbilityInProgressStash.Set(entity, new OriginalAbilityInProgressTag
+                {
+                    ActiveAbilityInProgress = activeAbilityEntity
                 });
 
                 _useAbilityStash.Remove(entity);

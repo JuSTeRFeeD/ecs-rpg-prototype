@@ -7,6 +7,6 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities
         /// <summary>
         /// Invoke every tick. Return true if the task is done.
         /// </summary>
-        bool Tick(Entity caster, Entity target, World world, float deltaTime);
+        bool Tick(Entity activeAbility, Entity caster, Entity target, World world, float deltaTime);
     }
 }

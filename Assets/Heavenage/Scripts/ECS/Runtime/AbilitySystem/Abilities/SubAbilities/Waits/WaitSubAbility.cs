@@ -19,7 +19,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Wai
             _duration = data.duration;
         }
 
-        public bool Tick(Entity caster, Entity target, World world, float deltaTime)
+        public bool Tick(Entity activeAbility, Entity caster, Entity target, World world, float deltaTime)
         {
             _duration -= deltaTime;
             return _duration <= 0f;

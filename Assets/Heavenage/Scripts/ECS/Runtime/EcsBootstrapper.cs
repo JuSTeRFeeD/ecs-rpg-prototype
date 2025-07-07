@@ -76,15 +76,19 @@ namespace Heavenage.Scripts.ECS.Runtime
         {
             var systemGroup = _world.CreateSystemsGroup();
             
-            // Abilities
-            systemGroup.AddSystem<ActivateAbilitySystem>();
-            systemGroup.AddSystem<AbilityExecutionSystem>();
-            // systemGroup.AddSystem<ChargingAbilitySystem>();
+            // === Abilities ===
             
-            // Attributes
+            // Activation
+            systemGroup.AddSystem<ActivateAbilitySystem>();
+            systemGroup.AddSystem<SetAbilityInputReleasedSystem>();
+            
+            // Progress
+            systemGroup.AddSystem<AbilityExecutionSystem>();
+            
+            // === Attributes ===
             systemGroup.AddSystem<AttributeModifierSystem>();
             
-            // Damage
+            // === Damage ===
             systemGroup.AddSystem<DoTDamageSystem>();
             
             _world.AddSystemsGroup(order, systemGroup);
