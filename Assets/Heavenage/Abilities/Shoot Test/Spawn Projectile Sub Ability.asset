@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547f9a8567114fd09653fae04f5d28a3, type: 3}
+  m_Name: Spawn Projectile Sub Ability
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 2301749673311135983, guid: de49cfe0d44fef44dad6f08d20ea6b74, type: 3}
+  speed: 20
+  lifetime: 3
+  destroyOnHit: 1
+  onHitAbility: {fileID: 11400000, guid: 20d94cd0c83df2d40b77d489fe06bb51, type: 2}
+  movementLogic: {fileID: 11400000, guid: 298c08bfd00625341ba0480b5d1331bd, type: 2}

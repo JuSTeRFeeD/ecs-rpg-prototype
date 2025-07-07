@@ -1,0 +1,18 @@
+{
+    "name": "Heavenage.ECS.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:534a9cb5e6270c841a6896a37bd5570b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

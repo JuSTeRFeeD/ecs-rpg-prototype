@@ -3,12 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Collide
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Hittable
   - Water
   - UI
   - 

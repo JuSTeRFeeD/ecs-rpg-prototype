@@ -1,0 +1,53 @@
+using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
+using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Projectiles.Components;
+using Scellecs.Morpeh;
+using Unity.IL2CPP.CompilerServices;
+using VContainer;
+
+namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Projectiles.Systems
+{
+    [Il2CppSetOption(Option.NullChecks, false)]
+    [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+    [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+    public sealed class ProjectileHitAbilitySystem : ISystem
+    {
+        [Inject] private Stash<ProjectileHitComponent> _projectileHitStash;
+        [Inject] private Stash<ActiveAbilityComponent> _activeAbilityStash;
+        [Inject] private Stash<ProjectileComponent> _projectileStash;
+        
+        public World World { get; set; }
+
+        private Filter _filter;
+
+        public void OnAwake()
+        {
+            _filter = World.Filter
+                .With<ProjectileHitComponent>()
+                .With<ProjectileComponent>()
+                .Build();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            foreach (var entity in _filter)
+            {
+                ref readonly var projectile = ref _projectileStash.Get(entity);
+                ref readonly var hit = ref _projectileHitStash.Get(entity);
+                
+                var hitAbilityEntity = World.CreateEntity();
+                _activeAbilityStash.Add(hitAbilityEntity, new ActiveAbilityComponent
+                {
+                    Caster = projectile.Source,
+                    Target = hit.HitEntity,
+                    CurrentStep = 0,
+                    Timer = 0,
+                    Tasks = projectile.OnHitAbility.CreateAbilityTasks()
+                });
+            }
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+}

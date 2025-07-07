@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c65cef1d210c459bb408255bb72c47da, type: 3}
+  m_Name: Start Charge Sub Ability
+  m_EditorClassIdentifier: 
+  releaseOnMaxCharge: 1
+  maxChargeTime: 3
+  targetingStrategy: {fileID: 11400000, guid: 0bed3acd40c3ecc41a1eac35bc6e4e14, type: 2}
+  indicatorViewPrefab: {fileID: 5908621551060745875, guid: 6e18b01d6a33b9f4683314f957ce1fcf, type: 3}
+  targetingModifier: {fileID: 11400000, guid: cb6c4d1e456b7b045ba8c58ee4839dc6, type: 2}

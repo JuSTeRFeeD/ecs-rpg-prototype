@@ -1,7 +1,17 @@
 {
     "name": "Heavenage",
     "rootNamespace": "",
-    "references": ["GUID:f19b7062049b889489d8f4a9e684c0a1"],
+    "references": [
+        "GUID:f19b7062049b889489d8f4a9e684c0a1",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:3377deebfb0acde45876d12c6e3d27cc",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:2c44a522df05b1241aa6c9d2e0fae405",
+        "GUID:534a9cb5e6270c841a6896a37bd5570b",
+        "GUID:1e4a6b4efee4abf4689510d3d28f8717",
+        "GUID:da301e0a8520b624fafd612897336353",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
