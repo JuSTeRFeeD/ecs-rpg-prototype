@@ -1,7 +1,9 @@
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
 using Heavenage.Scripts.ECS.Runtime.Common.Components;
+using Heavenage.Scripts.ECS.Runtime.Extensions;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
+using UnityEngine;
 using VContainer;
 
 namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
@@ -34,9 +36,15 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
                 var tasks = activeAbility.Tasks;
 
                 // End ability
-                if (activeAbility.CurrentStep >= tasks.Count)
+                if (activeAbility.CurrentStep >= tasks.length)
                 {
-                    _originalAbilityInProgressStash.Remove(activeAbility.OriginalAbilityEntity);
+                    Debug.Log($"End of active ability {entity.Id} IsDisposed: {World.IsDisposed(entity)} | original: {activeAbility.OriginalAbilityEntity.Id}");
+                    Debug.Log($"Original Ability Disposed? {World.IsDisposed(activeAbility.OriginalAbilityEntity)}");
+                    // TODO: FIX: End Ability called multiple times and second time original ability is disposed! why?
+                    if (!World.IsDisposed(activeAbility.OriginalAbilityEntity))
+                    {
+                        _originalAbilityInProgressStash.Remove(activeAbility.OriginalAbilityEntity);
+                    }
                     _toDestroyStash.Add(entity);
                     continue;
                 }

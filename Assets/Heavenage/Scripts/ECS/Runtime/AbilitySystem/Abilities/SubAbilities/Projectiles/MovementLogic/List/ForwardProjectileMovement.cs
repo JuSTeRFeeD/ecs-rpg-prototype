@@ -21,7 +21,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Pro
             private float _speed;
             private Vector3 _direction;
             
-            public void Initialize(Entity projectile, Entity source, Entity target, World world)
+            public void Initialize(Entity projectile, Entity source, Entity? target, World world)
             {
                 ref readonly var projectileData = ref StashRegistry.GetStash<ProjectileComponent>().Get(projectile); 
                 _speed = projectileData.Speed;
@@ -32,7 +32,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Pro
             {
                 var view = StashRegistry.GetStash<EntityViewComponent>().Get(projectile).Value;
 
-                var nextPos = view.transform.position + _direction * _speed * deltaTime;
+                var nextPos = view.transform.position + _direction * (_speed * deltaTime);
 
                 if (Physics.Raycast(view.transform.position, _direction, out var hit, _speed * deltaTime))
                 {

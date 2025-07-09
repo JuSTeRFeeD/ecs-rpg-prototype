@@ -16,5 +16,6 @@ MonoBehaviour:
   speed: 20
   lifetime: 3
   destroyOnHit: 1
-  onHitAbility: {fileID: 11400000, guid: 20d94cd0c83df2d40b77d489fe06bb51, type: 2}
+  spawnStrategy: {fileID: 11400000, guid: e7a689005cb8e6b41adc471d2b165639, type: 2}
   movementLogic: {fileID: 11400000, guid: 298c08bfd00625341ba0480b5d1331bd, type: 2}
+  onHitAbility: {fileID: 11400000, guid: 20d94cd0c83df2d40b77d489fe06bb51, type: 2}

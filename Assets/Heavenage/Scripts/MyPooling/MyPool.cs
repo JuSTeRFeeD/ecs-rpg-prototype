@@ -7,17 +7,16 @@ namespace Heavenage.Scripts.MyPooling
 {
     public class MyPool : MonoBehaviour
     {
-        // Singleton для легкого доступа
         private static MyPool _instance;
 
         public static MyPool Instance
         {
             get
             {
-                if (_instance == null)
+                if (!_instance)
                 {
                     _instance = FindFirstObjectByType<MyPool>();
-                    if (_instance == null)
+                    if (!_instance)
                     {
                         var go = new GameObject("[MyPool]");
                         _instance = go.AddComponent<MyPool>();
@@ -80,13 +79,11 @@ namespace Heavenage.Scripts.MyPooling
                 _delayedDespawnTimes[prefabId] = new Queue<float>();
 
 #if UNITY_EDITOR
-                // Создаем контейнер для неактивных объектов в редакторе
                 var container = new GameObject($"[PoolContainer] {config.prefab.name}");
                 container.transform.SetParent(transform, false);
                 _poolContainers[prefabId] = container.transform;
 #endif
 
-                // Предварительное заполнение пула
                 for (int i = 0; i < config.defaultSize; i++)
                 {
                     var obj = pool.Get();
@@ -110,14 +107,13 @@ namespace Heavenage.Scripts.MyPooling
                 _pools[prefabId] = pool;
                 _delayedDespawnTimes[prefabId] = new Queue<float>();
 #if UNITY_EDITOR
-                // Создаем контейнер для нового пула в редакторе
                 var container = new GameObject($"[PoolContainer] {prefab.name}");
                 container.transform.SetParent(transform, false);
                 _poolContainers[prefabId] = container.transform;
 #endif
             }
 
-            var obj = pool.Get(); // Активация объекта происходит в CreateNewPool (go.SetActive(true))
+            var obj = pool.Get();
             if (obj == null)
             {
                 Debug.LogError($"Failed to get object from pool for prefab {prefab.name} (prefabId: {prefabId}).");
@@ -138,10 +134,8 @@ namespace Heavenage.Scripts.MyPooling
 
             obj.transform.SetPositionAndRotation(position, rotation);
 #if UNITY_EDITOR
-            // В редакторе спавним объекты в корне сцены
             obj.transform.SetParent(null, false);
 #else
-            // В билде используем указанный родитель
             if (parent != null)
                 obj.transform.SetParent(parent, false);
 #endif
@@ -188,14 +182,14 @@ namespace Heavenage.Scripts.MyPooling
             int prefabId = pooledObject.prefabId;
             if (_pools.TryGetValue(prefabId, out var pool))
             {
-                pool.Release(obj); // Отключение и помещение в контейнер происходит в CreateNewPool
+                pool.Release(obj);
                 _activeObjects.Remove(instanceId);
             }
             else
             {
                 Debug.LogError($"No pool found for prefabId: {prefabId} for object {obj.name}. Attempting to create new pool.");
-                // Попытка создать пул для префаба, если он не найден
-                var prefab = obj; // Предполагаем, что объект сам является префабом (или нужно получить префаб другим способом)
+                
+                var prefab = obj;
                 pool = CreateNewPool(prefab, 10, 100);
                 _pools[prefabId] = pool;
                 _delayedDespawnTimes[prefabId] = new Queue<float>();
@@ -290,12 +284,11 @@ namespace Heavenage.Scripts.MyPooling
                     pooledObj.prefabId = prefabId;
                     return obj;
                 },
-                go => go.SetActive(true), // Активация объекта при доставании из пула
+                go => go.SetActive(true),
                 go =>
                 {
-                    go.SetActive(false); // Отключение объекта при возврате в пул
+                    go.SetActive(false);
 #if UNITY_EDITOR
-                    // Помещаем неактивный объект в соответствующий контейнер
                     int goPrefabId = go.GetComponent<PooledObject>().prefabId;
                     if (_poolContainers.TryGetValue(goPrefabId, out var container))
                     {
@@ -307,7 +300,7 @@ namespace Heavenage.Scripts.MyPooling
                 {
                     if (Application.isPlaying)
                     {
-                        Destroy(go); // Уничтожаем объект только в Play Mode
+                        Destroy(go);
                     }
                 },
                 true,

@@ -89,7 +89,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.Targeting.List
             _circleAreaTargetingStash.Remove(activeAbility);
         }
 
-        public IEnumerable<Entity> GetTargets(Entity abilityEntity, World world)
+        public List<Entity> GetTargets(Entity abilityEntity, World world)
         {
             var circleAreaTargeting = _circleAreaTargetingStash.Get(abilityEntity);
             var attributeStash = world.GetStash<AttributeComponent>();

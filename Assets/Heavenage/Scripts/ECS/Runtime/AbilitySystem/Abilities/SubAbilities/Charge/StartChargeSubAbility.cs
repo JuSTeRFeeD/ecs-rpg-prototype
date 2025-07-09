@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Charge.TargetingModifiers;
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.Targeting;
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
@@ -71,14 +72,16 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Cha
             
             _targetingStrategy.Tick(activeAbility, caster, world);
 
-            // todo: resolve on input key release
             if (charging.AutoReleaseOnMaxCharge && charging.ElapsedTime >= charging.MaxChargeTime || 
                 inputReleasedStash.Has(activeAbility)) 
             {
-                // TODO: use resolved targets
                 var resolvedTargets = _targetingStrategy.GetTargets(activeAbility, world);
-                _targetingStrategy.OnEnd(activeAbility, world);
+                var resolvedTargetsStash = StashRegistry.GetStash<ResolvedTargetsComponent>();
+                ref var targets = ref resolvedTargetsStash.GetOrAdd(activeAbility);
+                targets.Targets ??= new List<Entity>(resolvedTargets.Count);
+                targets.Targets.AddRange(resolvedTargets);
                 
+                _targetingStrategy.OnEnd(activeAbility, world);
                 return true;
             }
             

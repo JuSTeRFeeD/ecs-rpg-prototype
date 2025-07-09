@@ -4,7 +4,7 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.SubAbilities.Pro
 {
     public interface IProjectileMovementLogic
     {
-        void Initialize(Entity projectile, Entity source, Entity target, World world);
+        void Initialize(Entity projectile, Entity source, Entity? target, World world);
         void Tick(Entity projectile, World world, float deltaTime);
     }
 }

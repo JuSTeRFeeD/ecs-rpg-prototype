@@ -51,12 +51,10 @@ namespace Heavenage.Scripts.ECS.Runtime.Player.Systems
             if (!isReleased)
             {
                 _useAbilityStash.Set(abilityEntity, new UseAbilityRequest { Caster = character, });
-                Debug.Log($"Used ability {abilityIdx}");
             }
             else
             {
                 _inputReleasedStash.Set(abilityEntity);
-                Debug.Log($"Released ability {abilityIdx}");
             }
         }
 

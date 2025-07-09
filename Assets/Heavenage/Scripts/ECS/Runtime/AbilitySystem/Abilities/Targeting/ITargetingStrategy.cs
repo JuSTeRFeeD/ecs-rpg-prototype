@@ -8,6 +8,6 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities.Targeting
         void OnStart(Entity activeAbility, World world);
         void Tick(Entity activeAbility, Entity caster, World world);
         void OnEnd(Entity activeAbility, World world);
-        IEnumerable<Entity> GetTargets(Entity abilityEntity, World world);
+        List<Entity> GetTargets(Entity abilityEntity, World world);
     }
 }

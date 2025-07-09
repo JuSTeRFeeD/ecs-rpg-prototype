@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Abilities;
 using Heavenage.Scripts.MorpehOneFrame;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Collections;
 
 namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components
 {
@@ -35,6 +36,6 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components
         public Entity Caster;
         public Entity Target;
         public int CurrentStep;
-        public List<IAbilityTask> Tasks;
+        public FastList<IAbilityTask> Tasks;
     }
 }

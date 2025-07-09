@@ -2,6 +2,7 @@ using Heavenage.Scripts.ECS.Runtime.AbilitySystem.Components;
 using Heavenage.Scripts.ECS.Runtime.Common.Components;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
+using UnityEngine;
 using VContainer;
 
 namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
@@ -32,9 +33,6 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
 
         public void OnUpdate(float deltaTime)
         {
-            //
-            // TODO: somewhere check if ability is already active && is not on cooldown && requirements are met
-            //
             foreach (var entity in _filter)
             {
                 ref readonly var activateAbility = ref _useAbilityStash.Get(entity);
@@ -53,6 +51,8 @@ namespace Heavenage.Scripts.ECS.Runtime.AbilitySystem.Systems
                     Tasks = abilityData.AbilityDefinition.CreateAbilityTasks(),
                     CurrentStep = 0,
                 });
+                
+                Debug.Log("activate ability " + abilityData.AbilityDefinition.AbilityName);
                 
                 // Mark original ability as in progress
                 _originalAbilityInProgressStash.Set(entity, new OriginalAbilityInProgressTag
